@@ -39,3 +39,23 @@ function drawRandomShape(x, y, size) {
         drawGoldBar(ctx, x, y, barLength, barHeight);
     }
 }
+
+function drawShapes(numShapes) {
+    for (let i = 0; i < numShapes; i++) {
+        const x = Math.random() * canvas.width;
+        const y = Math.random() * canvas.height;
+        const size = Math.random() * 30 + 20;
+        drawRandomShape(x, y, size);
+    }
+}
+
+setBackground();
+drawShapes(130);
+
+window.addEventListener('resize', () => {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    setBackground();
+    drawShapes(130);
+});
