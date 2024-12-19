@@ -7,3 +7,4 @@ generativedesign.js Bronvermelding:
 - Bron: https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/getContext
 - Bron: https://developer.mozilla.org/en-US/docs/Web/CSS/background
 - Bron: https://chatgpt.com/share/6763a08c-76dc-800c-a4df-a3e2f9b3ea06
+- Bron: https://canvas.ehb.be/courses/39327
