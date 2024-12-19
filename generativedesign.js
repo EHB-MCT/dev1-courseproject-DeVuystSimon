@@ -120,4 +120,4 @@ canvas.addEventListener('mousemove', function(e) {
 
 createShapes(130); // 130 vormen aanmaken
 animate(); // Animatie starten
-//
+//TAAK KLAAR
