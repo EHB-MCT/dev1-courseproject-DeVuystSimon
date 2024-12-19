@@ -7,12 +7,12 @@ const ctx = canvas.getContext('2d');
 
 // De Canvas Breedte en hoogte aangemaakt (zelf geschreven)
 function setCanvasSize() {
-    canvas.width = window.innerWidth;// Met behulp van "The Canvas "context" object"(Zie cursus Module functions)
+    canvas.width = window.innerWidth; // Met behulp van "The Canvas "context" object"(Zie cursus Module functions)
     canvas.height = window.innerHeight;
 }
 setCanvasSize();
 
-// Achtergrond instellen met een lineair verloop (zelf geschreven). 
+// Achtergrond instellen met een lineair verloop (zelf geschreven).
 function setBackground() {
     let gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height); // ctx. Bron: https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/getContext
     gradient.addColorStop(0, '#1e3c72');
@@ -30,7 +30,7 @@ function drawDiamond(x, y, size) {
     ctx.lineTo(x, y + size * 1.2);
     ctx.lineTo(x - size * 0.6, y);
     ctx.closePath();
-    ctx.fillStyle = '#A7D3E0';// Licht blauwe kleur
+    ctx.fillStyle = '#A7D3E0'; // Licht blauwe kleur
     ctx.fill();
 }
 
@@ -41,35 +41,80 @@ function drawGoldBar(x, y, width, height) {
     ctx.fillRect(x - width / 2, y - height / 2, width, height);
 }
 
-// DrawRandomShape function herschreven voor leesbaarheid + Laatstste keer was met behulp van chat gpt en toen had ik niet gerefereerd.
-// Zelf geschreven maar wel gekeken naar de oefeningen van nr 5-selection-input-events als houvast
-function drawRandomShape() {
-    let x = Math.random() * canvas.width;
-    let y = Math.random() * canvas.height;
-    let size = Math.random() * 30 + 20; // Random grootte voorzien
+let shapes = []; // Array voor het opslaan van vormen (nieuw).
+let mouseX = 0;
+let mouseY = 0;
+const interactionRadius = 300; // Interactieradius rond de cursor
 
-    if (Math.random() < 0.5) { // 50 procent kans op een Diamand
-        drawDiamond(x, y, size);
-    } else {                    // Anders berekenen we de Goudstaaf
-        let width = size * (Math.random() < 0.5 ? 4 : 6); // De Breedte is random, of 4 of 6 keer de grootte
-        let height = size * 0.5; // De hoogte is altijd de helft van de random gekozen grootte van de goudstaaf
-        drawGoldBar(x, y, width, height);
+// Vormen aanmaken (zelf geschreven).
+function createShapes(numShapes) {
+    for (let i = 0; i < numShapes; i++) {
+        let size = Math.random() * 30 + 20;
+        let type = Math.random() < 0.5 ? 'diamond' : 'goldBar';
+        let width = size * (Math.random() < 0.5 ? 4 : 6);
+        let height = size * 0.5;
+        let dx = Math.random() * 4 - 2;
+        let dy = Math.random() * 4 - 2;
+        let shape = {
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            size: size,
+            width: width,
+            height: height,
+            dx: dx,
+            dy: dy,
+            type: type
+        };
+        shapes.push(shape);
     }
 }
 
-// Fucntion draw multiple shapes (zelf geschreven)
-function drawShapes(numShapes) {
-    for (let i = 0; i < numShapes; i++) { //for loop
-        // volgende 3 lijnen zijn nvt
-               // const x = Math.random() * canvas.width;
-              // const y = Math.random() * canvas.height;
-             // const size = Math.random() * 30 + 20;
-        drawRandomShape();
-    }
+// Vormen updaten (zelf geschreven).
+function updateShapes() {
+    shapes.forEach(shape => {
+        // Update snelheid binnen interactieradius
+        let distX = shape.x - mouseX;
+        let distY = shape.y - mouseY;
+        let distance = Math.sqrt(distX * distX + distY * distY);
+        if (distance < interactionRadius) {
+            let forceDirectionX = distX / distance;
+            let forceDirectionY = distY / distance;
+            let force = (interactionRadius - distance) / interactionRadius;
+            shape.dx -= forceDirectionX * force * -0.05;
+            shape.dy -= forceDirectionY * force * -0.05;
+        }
+
+        // Beweging en terugkaatsing
+        shape.x += shape.dx;
+        shape.y += shape.dy;
+        if (shape.x <= 0 || shape.x >= canvas.width) shape.dx = -shape.dx; // Correcte terugkaatsing voor x-as
+        if (shape.y <= 0 || shape.y >= canvas.height) shape.dy = -shape.dy; // Correcte terugkaatsing voor y-as
+    });
 }
-// Eventlistener er van tussen gehaald.
-// gebaseerd op de getBackground();
-// Bron: https://developer.mozilla.org/en-US/docs/Web/CSS/background
-setBackground();  // Gradient op de achtergrond zetten
-//zelf geschreven
-drawShapes(130); // aantal shapes
+
+// Vormen tekenen op canvas (zelf geschreven).
+function drawAllShapes() {
+    shapes.forEach(shape => {
+        if (shape.type === 'diamond') {
+            drawDiamond(shape.x, shape.y, shape.size);
+        } else {
+            drawGoldBar(shape.x, shape.y, shape.width, shape.height);
+        }
+    });
+}
+
+// Animatie loop (zelf geschreven).
+function animate() {
+    setBackground(); // Achtergrond resetten
+    updateShapes(); // Posities van vormen updaten
+    drawAllShapes(); // Alle vormen opnieuw tekenen
+    requestAnimationFrame(animate); // Volgende frame van animatie aanvragen
+}
+
+canvas.addEventListener('mousemove', function(e) {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+});
+
+createShapes(130); // 130 vormen aanmaken
+animate(); // Animatie starten
