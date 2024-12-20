@@ -29,7 +29,7 @@ const pinkSquarePositions = [ // individueel de posities per vierkant bepalen
 ];
 // Gebaseerd op de for-of
 // Bron: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...of
-for (const pos of pinkSquarePositions) {
+for (const pos of pinkSquarePositions) {// for-of loop voor het tekenen van de pinksquares
     context.fillStyle = "pink";
-    context.fillRect(pos.x, pos.y, 50, 50);// for loop voor het tekenen van de pinksquares
+    context.fillRect(pos.x, pos.y, 50, 50);// grootte pinksquares
 }
