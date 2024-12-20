@@ -1,7 +1,9 @@
 /*
 Simon De Vuyst
 */
-/** @type {CanvasRenderingContext2D} */
+/** 
+//zelf geschreven, met behulp van de oefeningen
+@type {CanvasRenderingContext2D} */
 let context;
 
 let canvas = document.querySelector('canvas');
@@ -12,10 +14,10 @@ context = canvas.getContext('2d');
 alert("Start");
 
 context.fillStyle = "black";
-context.fillRect(100, 100, 300, 300);
+context.fillRect(100, 100, 300, 300);// zwart achtergrond/vierkant tekenen
 
 
-const pinkSquarePositions = [
+const pinkSquarePositions = [ // individueel de posities per vierkant bepalen
     { x: 125, y: 175 },
     { x: 175, y: 225 },
     { x: 125, y: 275 },
@@ -25,9 +27,9 @@ const pinkSquarePositions = [
     { x: 325, y: 275 },
     { x: 275, y: 325 }
 ];
-
-for (let i = 0; i < pinkSquarePositions.length; i++) {
-    const pos = pinkSquarePositions[i];
+// Gebaseerd op de for-of
+// Bron: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...of
+for (const pos of pinkSquarePositions) {
     context.fillStyle = "pink";
-    context.fillRect(pos.x, pos.y, 50, 50);
+    context.fillRect(pos.x, pos.y, 50, 50);// for loop voor het tekenen van de pinksquares
 }
